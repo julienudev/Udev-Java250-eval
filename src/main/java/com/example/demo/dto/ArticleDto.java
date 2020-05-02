@@ -1,4 +1,4 @@
-package com.example.demo.controller.clientsidetemplating.dto;
+package com.example.demo.dto;
 
 /**
  * Classe permettant d'exposer des données au format JSON d'un article.

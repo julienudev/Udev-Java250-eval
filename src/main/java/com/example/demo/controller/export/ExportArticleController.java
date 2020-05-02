@@ -1,6 +1,6 @@
 package com.example.demo.controller.export;
 
-import com.example.demo.service.ArticleService;
+import com.example.demo.service.export.ExportArticleCSV;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 public class ExportArticleController {
 
     @Autowired
-    private ArticleService articleService;
+    private ExportArticleCSV exportArticleCSV;
 
     /**
      * Export des articles au format CSV, déclenché sur l'url http://.../export/articles/csv
@@ -32,14 +32,11 @@ public class ExportArticleController {
         // positionne de metadata sur la réponse afin d'informer le navigateur que la réponse correspond à un fichier téléchargeable.
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"export-articles.csv\"");
+
+        // Le writter est un objet provenant de la response dans lequel on va pouvoir écrire pour générer le contenu de l'export CSV.
         PrintWriter writer = response.getWriter();
 
-        // rechercher tous les articles : articleService.findAll();
-
-        writer.println("Libelle;Prix");
-        writer.println("a1;p1");
-        writer.println("a2;p2");
-        writer.println("a3;p3");
+        exportArticleCSV.exportAll(writer);
     }
 
 }

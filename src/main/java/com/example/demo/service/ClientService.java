@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Client;
+import com.example.demo.dto.ClientDto;
 import com.example.demo.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Service contenant les actions métiers liées aux clients.
@@ -21,7 +22,12 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public List<Client> findAllClients() {
-        return clientRepository.findAll();
+    public List<ClientDto> findAllClients() {
+        // Transformation d'une liste de Client en ClientDto
+        return clientRepository
+                .findAll()
+                .stream()
+                .map(c -> new ClientDto(c.getId(), c.getNom(), c.getPrenom()))
+                .collect(toList());
     }
 }
