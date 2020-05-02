@@ -7,19 +7,23 @@
 4° export total factures (cf fichier 05-factures-excel.xlsx)
 5° export PDF d'une facture (format au choix)
 
-
 # Fonctionnement
 Ouvrir le projet dans eclipse ou intellij.
 Démarrer l'application avec la classe 'main' : com.example.demo.DemoApplication
+
+## IHM 1 : Server side templating
 Se connecter à la home page en accédant à l'url : http://localhost:8080/
 Il s'agit d'une application Spring boot intégrant une petite base de données en mémoire.
 L'application simule la gestion d'une base d'articles de clients et de factures.
+
+## IHM 2 : Utiliser l'application angular
+Cf README du projet ijva250-angular-app
 
 # Data
 Améliorer ses jeux de données (voir classe com.example.demo.service.InitData):
 * Ajouter des données de tests (des nouveaux clients ou articles ...)
 * Ajouter une nouvelle informations : la quantité d'article en stock
-* Ajouter une nouvelle info age
+* Ajouter une nouvelle info age des clients
 
 ## CSV
 Un fichier CSV est un fichier texte "à plat". Chaque ligne correspond à une ligne du tableau, chaque colonne est séparée par des ";"
