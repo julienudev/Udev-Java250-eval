@@ -1,8 +1,11 @@
 package com.example.demo.service.export;
 
 import com.example.demo.entity.Article;
+import com.example.demo.entity.Facture;
 import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.FactureRepository;
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.FactureService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,25 +14,25 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
-
 @Service
-public class ExportArticleXLSXService {
-
-
-    @Autowired
-    private ArticleService articleService;
+public class ExportFactureXlsxService {
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private FactureService factureService;
 
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    @Autowired
+    private FactureRepository factureRepository;
+
+    public List<Facture> findAllByClientId(Long clientId) {
+
+        return factureRepository.findByClient_Id(clientId);
     }
 
-    public static ByteArrayInputStream articlesToExcel(List<Article> articles) throws IOException {
+    public static ByteArrayInputStream factureToExcel(List<Facture> factures) throws IOException {
         //Tableau de nom de colonnes
-        String[] cols = {"Id", "Libelle"};
+        String[] cols = {"Id", "Total"};
 
         //nouveaux objets
         Workbook workbook = new XSSFWorkbook();
@@ -37,7 +40,7 @@ public class ExportArticleXLSXService {
 
         //creation feuille excel
         CreationHelper createHelper = workbook.getCreationHelper();
-        Sheet sheet = workbook.createSheet("Articles");
+        Sheet sheet = workbook.createSheet("Factures");
 
         Font headerFont = workbook.createFont();
         headerFont.setColor(IndexedColors.BLUE.getIndex());
@@ -54,12 +57,14 @@ public class ExportArticleXLSXService {
 
         // Creation Contenu
         int rowIndex = 1;
-        for (Article article : articles) {
+        for (Facture facture : factures) {
             //Row row = sheet.createRow(rowIndex++);
-            Row row = sheet.createRow(rowIndex);
+            Sheet sheet2 = workbook.createSheet("Factures   "+facture.getId());
+            //String[] cols = {"Libelle", "Quantité"};
+            Row row = sheet2.createRow(rowIndex);
             rowIndex = rowIndex + 1;
-            row.createCell(0).setCellValue(article.getId());
-            row.createCell(1).setCellValue(article.getLibelle());
+            row.createCell(0).setCellValue(facture.getId());
+            row.createCell(1).setCellValue( facture.getTotal());
 
         }
         workbook.write(out);
@@ -68,4 +73,3 @@ public class ExportArticleXLSXService {
         //workbook.close();
     }
 }
-

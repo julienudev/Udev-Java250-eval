@@ -38,6 +38,7 @@ public class FactureService {
                 .collect(toList());
     }
 
+
     public FactureDto findById(Long id) {
         // Transformation d'une Facture en FactureDto
         Facture facture = factureRepository.getOne(id);
@@ -60,5 +61,9 @@ public class FactureService {
     private LigneFactureDto ligneFactureDto(LigneFacture lf) {
         Article article = lf.getArticle();
         return new LigneFactureDto(new ArticleDto(article.getId(), article.getLibelle(), article.getPrix()), lf.getQuantite());
+    }
+
+    public List<Facture> findFacturesClient(Long clientId) {
+        return factureRepository.findByClient_Id(clientId);
     }
 }
