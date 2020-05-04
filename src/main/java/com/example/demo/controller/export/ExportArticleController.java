@@ -1,15 +1,23 @@
 package com.example.demo.controller.export;
 
-import com.example.demo.service.export.ExportArticleCSV;
+import com.example.demo.entity.Article;
+import com.example.demo.service.export.ExportArticleCSVService;
+import com.example.demo.service.export.ExportArticleXLSXService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Controller pour réaliser l'export des articles.
@@ -19,7 +27,10 @@ import java.io.PrintWriter;
 public class ExportArticleController {
 
     @Autowired
-    private ExportArticleCSV exportArticleCSV;
+    private ExportArticleCSVService exportArticleCSV;
+
+    @Autowired
+    private ExportArticleXLSXService exportArticleXLSX;
 
     /**
      * Export des articles au format CSV, déclenché sur l'url http://.../export/articles/csv
@@ -37,6 +48,33 @@ public class ExportArticleController {
         PrintWriter writer = response.getWriter();
 
         exportArticleCSV.exportAll(writer);
+
+        /*exportArticleCSV.exportAll( new PrintWriter(System.out));
+        FileOutputStream out = new FileOutputStream("c:/temps/temp.csv")
+        exportArticleCSV.exportAll( new PrintWriter(out));*/
+
     }
 
+
+    @GetMapping("/articles/xlsx")
+    public ResponseEntity<InputStreamResource> articlesXLSX() throws IOException {
+        // recupere list article
+        List<Article> articles = (List<Article>) exportArticleXLSX.findAll();
+        //An array of bytes that was provided by the creator of the stream.
+        ByteArrayInputStream in = exportArticleXLSX.articlesToExcel(articles);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=export-articles.xlsx");
+
+
+        return new ResponseEntity<InputStreamResource>((new InputStreamResource(in)), headers, HttpStatus.OK);
+
+        //alternative de retour
+        /*return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(new InputStreamResource(in));
+*/
+    }
 }
+
+
