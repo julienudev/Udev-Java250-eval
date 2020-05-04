@@ -2,9 +2,10 @@ package com.example.demo.service.export;
 
 import com.example.demo.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
-
+@Service
 public class ExportArticleCSV {
 
     @Autowired
