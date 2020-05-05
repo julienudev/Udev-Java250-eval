@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Entity représentant un client.
@@ -21,6 +22,19 @@ public class Client {
 
     @Column
     private LocalDate dateNaissance;
+
+    /*public Integer getAge() {
+        Date d=new Date();
+        int year=d.getYear();
+        age = d - (dateNaissance.getYear());
+        return age;
+    }*/
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    private Integer age;
 
     public Long getId() {
         return id;
@@ -53,5 +67,7 @@ public class Client {
     public void setDateNaissance(LocalDate dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
+
+
 
 }

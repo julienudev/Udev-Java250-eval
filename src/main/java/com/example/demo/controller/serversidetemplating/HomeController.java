@@ -50,6 +50,8 @@ public class HomeController {
         List<FactureDto> factures = factureService.findAllFactures();
         modelAndView.addObject("factures", factures);
 
+
+
         return modelAndView;
     }
 
