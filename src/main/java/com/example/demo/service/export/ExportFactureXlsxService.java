@@ -1,6 +1,7 @@
 package com.example.demo.service.export;
 
 import com.example.demo.entity.Article;
+import com.example.demo.entity.Client;
 import com.example.demo.entity.Facture;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.FactureRepository;
@@ -19,6 +20,8 @@ import java.util.List;
 @Service
 public class ExportFactureXlsxService {
 
+    //private static FactureService factureService;
+    //private static FactureRepository factureRepository;
     @Autowired
     private FactureService factureService;
 
@@ -30,9 +33,8 @@ public class ExportFactureXlsxService {
         return factureRepository.findByClient_Id(clientId);
     }
 
-    public static ByteArrayInputStream factureToExcel(List<Facture> factures) throws IOException {
-        //Tableau de nom de colonnes
-        String[] cols = {"Id", "Total"};
+/*    public ByteArrayInputStream factureToExcel(List<Facture> factures) throws IOException {
+
 
         //nouveaux objets
         Workbook workbook = new XSSFWorkbook();
@@ -40,7 +42,10 @@ public class ExportFactureXlsxService {
 
         //creation feuille excel
         CreationHelper createHelper = workbook.getCreationHelper();
-        Sheet sheet = workbook.createSheet("Factures");
+        Sheet sheet = workbook.createSheet("Client");
+
+        //Tableau de nom de colonnes
+        String[] cols = {"Id", "Nom"};
 
         Font headerFont = workbook.createFont();
         headerFont.setColor(IndexedColors.BLUE.getIndex());
@@ -54,22 +59,31 @@ public class ExportFactureXlsxService {
             cell.setCellValue(cols[col]);
             cell.setCellStyle(headerCellStyle);
         }
+        Row row = sheet.createRow(1);
+ row.createCell(0).setCellValue(factureService.findClient(clientId));
+//        row.createCell(1).setCellValue(client.getNom());
+
+
+
 
         // Creation Contenu
         int rowIndex = 1;
         for (Facture facture : factures) {
             //Row row = sheet.createRow(rowIndex++);
             Sheet sheet2 = workbook.createSheet("Factures   "+facture.getId());
-            //String[] cols = {"Libelle", "Quantité"};
-            Row row = sheet2.createRow(rowIndex);
-            rowIndex = rowIndex + 1;
-            row.createCell(0).setCellValue(facture.getId());
-            row.createCell(1).setCellValue( facture.getTotal());
 
-        }
+           *//* rowIndex = rowIndex + 1;
+            String[] colsF = {"Libelle", "Quantité","Prix"};
+            Row rowLigne = sheet2.createRow(rowIndex);
+            *//*
+            }
+           // row.createCell(0).setCellValue(facture.get);
+           // row.createCell(1).setCellValue( facture.getTotal());
+
+
         workbook.write(out);
 
         return new ByteArrayInputStream(out.toByteArray());
         //workbook.close();
-    }
+    }*/
 }

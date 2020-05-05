@@ -8,11 +8,13 @@ import com.example.demo.entity.Article;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.Facture;
 import com.example.demo.entity.LigneFacture;
+import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.FactureRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -24,6 +26,8 @@ import static java.util.stream.Collectors.toList;
 public class FactureService {
 
     private FactureRepository factureRepository;
+    private ClientRepository clientRepository;
+
 
     public FactureService(FactureRepository factureRepository) {
         this.factureRepository = factureRepository;
@@ -66,4 +70,5 @@ public class FactureService {
     public List<Facture> findFacturesClient(Long clientId) {
         return factureRepository.findByClient_Id(clientId);
     }
-}
+
+    }
