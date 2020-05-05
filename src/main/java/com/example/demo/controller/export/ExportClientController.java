@@ -47,21 +47,16 @@ public class ExportClientController {
 
         exportClientCSV.exportAll(writer);
 
-        /*exportArticleCSV.exportAll( new PrintWriter(System.out));
-        FileOutputStream out = new FileOutputStream("c:/temps/temp.csv")
-        exportArticleCSV.exportAll( new PrintWriter(out));*/
-
     }
 
     @GetMapping("/clients/xlsx")
     public ResponseEntity<InputStreamResource> articlesXLSX() throws IOException {
-        // recupere list article
+        // recupere list article (service -> repo )
         List<Client> clients = (List<Client>) exportClientXLSXService.findAll();
         //An array of bytes that was provided by the creator of the stream.
         ByteArrayInputStream in = exportClientXLSXService.clientsToExcel(clients);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=export-articles.xlsx");
-
 
         return new ResponseEntity<InputStreamResource>((new InputStreamResource(in)), headers, HttpStatus.OK);
 
@@ -69,9 +64,8 @@ public class ExportClientController {
         /*return ResponseEntity
                 .ok()
                 .headers(headers)
-                .body(new InputStreamResource(in));
-*/
-    }
+                .body(new InputStreamResource(in));*/
 
+    }
 
 }

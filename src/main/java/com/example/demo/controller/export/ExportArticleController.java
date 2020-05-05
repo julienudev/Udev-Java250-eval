@@ -49,10 +49,6 @@ public class ExportArticleController {
 
         exportArticleCSV.exportAll(writer);
 
-        /*exportArticleCSV.exportAll( new PrintWriter(System.out));
-        FileOutputStream out = new FileOutputStream("c:/temps/temp.csv")
-        exportArticleCSV.exportAll( new PrintWriter(out));*/
-
     }
 
 
@@ -64,8 +60,6 @@ public class ExportArticleController {
         ByteArrayInputStream in = exportArticleXLSX.articlesToExcel(articles);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=export-articles.xlsx");
-
-
         return new ResponseEntity<InputStreamResource>((new InputStreamResource(in)), headers, HttpStatus.OK);
 
         //alternative de retour

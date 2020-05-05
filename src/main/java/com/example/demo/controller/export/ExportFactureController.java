@@ -1,14 +1,10 @@
 package com.example.demo.controller.export;
 
-import com.example.demo.entity.Article;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.Facture;
 import com.example.demo.entity.LigneFacture;
-import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.FactureRepository;
 import com.example.demo.service.FactureService;
-import com.example.demo.service.export.ExportArticleCSVService;
-import com.example.demo.service.export.ExportArticleXLSXService;
 import com.example.demo.service.export.ExportFactureXlsxService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,19 +12,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -46,33 +36,8 @@ public class ExportFactureController {
     @Autowired
     private FactureService factureService;
 
-/*    @GetMapping("/clients/{id}/factures/xlsx")
-    public ResponseEntity<InputStreamResource> factureXLSX(
-            @PathVariable("id") Long clientId
-    ) throws IOException {
-        //recuper id Client
-        //String idClient = "";
-        //idClient = factureRepository.findByClient_Id(id).toString();
-
-        // recupere list factures d un client
-        List<Facture> factures =
-                (List<Facture>) factureService.findFacturesClient(clientId);
-        //An array of bytes that was provided by the creator of the stream.
-        ByteArrayInputStream in = exportFacturesService.factureToExcel(factures);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=export-articles.xlsx");
-
-
-        return new ResponseEntity<InputStreamResource>((new InputStreamResource(in)), headers, HttpStatus.OK);
-
-        //alternative de retour
-        *//*return ResponseEntity
-                .ok()
-                .headers(headers)
-                .body(new InputStreamResource(in));
-*//*
-    }*/
-
+    //prevoir refactorisation dans service
+    //Export Excel de toutes les factures d'un client / feuille client/feuilles factures
     @GetMapping("/clients/{id}/factures/xlsx")
     public void factureXLSXByClient(@PathVariable("id") Long clientId, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/csv");
@@ -94,12 +59,10 @@ public class ExportFactureController {
         Cell cellId = headerRow.createCell(2);
         cellId.setCellValue("IdClient");
 
-
-
         Cell cellTotal = headerRow.createCell(3);
         cellTotal.setCellValue("Prix Total");
 
-        //remplissage tableau Total des factures du client
+        //remplissage tableau feuille client
         int indexRow = 1;
         for (Facture facture : factures) {
 
@@ -116,15 +79,11 @@ public class ExportFactureController {
             Cell idClient = row.createCell(2);
             idClient.setCellValue(c.getId());
 
-
-
             Cell total = row.createCell(3);
             total.setCellValue(facture.getTotal());
 
 
-
-            indexRow = indexRow + 1;
-            //remplissage détails de chaque  facture du client
+            //Creation feuilles factures
             Sheet sheetDetails = workbook.createSheet("Factures   " + facture.getId());
 
             //Creation headers details d'une facture
@@ -134,16 +93,8 @@ public class ExportFactureController {
                 Cell cell = headerRowDetails.createCell(col);
                 cell.setCellValue(colDetailFacture[col]);
             }
-            /*Cell libelle = headerRowDetails.createCell(0);
-            libelle.setCellValue("Libellé");
-            Cell quantite = headerRowDetails.createCell(1);
-            quantite  .setCellValue("Quantité");
-            Cell prix = headerRowDetails.createCell(2);
-            prix.setCellValue("Prix");
-            Cell sousTotal = headerRowDetails.createCell(3);
-            sousTotal.setCellValue("sousTotal");*/
 
-
+            //Creation détails contenu facture
             int indexDetails = 1;
             for (LigneFacture ligneFacture : facture.getLigneFactures()) {
                 Row newRow = sheetDetails.createRow(indexDetails);
@@ -155,7 +106,11 @@ public class ExportFactureController {
             }
             workbook.write(response.getOutputStream());
             ((XSSFWorkbook) workbook).close();
+
+            indexRow = indexRow + 1;
         }
     }
+
+
 }
 
