@@ -30,7 +30,7 @@ public class ExportClientCSVService {
 
         for (Client client : allClients) {
             writer.println(client.getNom() + ";" + client.getPrenom()+
-                    ";" + (now.getYear() - client.getDateNaissance().getYear())+" ans");;
+                    ";" + (now.getYear() - client.getDateNaissance().getYear())+" ans");
 
         }
 
