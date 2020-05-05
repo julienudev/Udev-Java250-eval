@@ -3,6 +3,7 @@ package com.example.demo.service.export;
 import com.example.demo.entity.Article;
 import com.example.demo.entity.Client;
 import com.example.demo.repository.ClientRepository;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,30 +26,38 @@ public class ExportClientXLSXService {
     }
 
     public static ByteArrayInputStream clientsToExcel(List<Client> clients) throws IOException {
-        //Tableau de nom de colonnes
+        //Tableau de headers
         String[] cols = {"Nom", "Prenom" , "Age"};
-        LocalDate now = LocalDate.now();
 
+        //Date du jour
+        LocalDate now = LocalDate.now();
 
         //nouveaux objets
         Workbook workbook = new XSSFWorkbook();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        //creation feuille excel
-        CreationHelper createHelper = workbook.getCreationHelper();
+        //creation feuille excel "Clients"
+        //CreationHelper createHelper = workbook.getCreationHelper();
         Sheet sheet = workbook.createSheet("Clients");
 
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        //headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
         Font headerFont = workbook.createFont();
-        headerFont.setColor(IndexedColors.BLUE.getIndex());
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
+        headerFont.setColor(IndexedColors.PINK.getIndex());
+        //headerFont.setBoldweight( Font.BOLDWEIGHT_BOLD);
+
+
+
+        headerStyle.setFont(headerFont);
 
         // Creation Header
         Row headerRow = sheet.createRow(0);
         for (int col = 0; col < cols.length; col++) {
             Cell cell = headerRow.createCell(col);
             cell.setCellValue(cols[col]);
-            cell.setCellStyle(headerCellStyle);
+            cell.setCellStyle(headerStyle);
         }
 
         // Creation Contenu
@@ -60,8 +69,6 @@ public class ExportClientXLSXService {
             row.createCell(0).setCellValue(client.getNom());
             row.createCell(1).setCellValue(client.getPrenom());
             row.createCell(2).setCellValue(  (now.getYear() - client.getDateNaissance().getYear())+" ans"  );
-            ;
-
 
         }
         workbook.write(out);
